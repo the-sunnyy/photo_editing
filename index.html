@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SUNNY-EDIT-VERSION-32-ICON-ALIGN-ROW -->
+<!-- SUNNY-EDIT-VERSION-36-UNDERLINE-TOGGLE -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -13,8 +13,28 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1B1A18">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Fraunces:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+@import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css');
+
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GMarketSans';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+  font-weight: 700;
+  font-display: swap;
+}
 
 :root{
   --ink:#1B1A18;
@@ -853,10 +873,12 @@ select{
   font-weight:700;
   cursor:pointer;
   flex:none;
-  width:36px;
+  width:32px;
   height:36px;
 }
 .bold-toggle.active{border-color:var(--accent); color:var(--accent);}
+.italic-toggle{font-style:italic; font-weight:500;}
+.underline-toggle{text-decoration:underline; font-weight:500;}
 
 .text-toolbar{
   display:flex;
@@ -1221,11 +1243,20 @@ select{
           <textarea id="textContent" placeholder="텍스트를 입력하세요"></textarea>
           <div class="text-toolbar">
             <select id="textFont" class="bg-type-select text-font-select">
+              <option value="Noto Sans KR">Noto Sans KR</option>
               <option value="Pretendard">Pretendard</option>
-              <option value="IBM Plex Mono">IBM Plex Mono</option>
-              <option value="Fraunces">Fraunces</option>
+              <option value="IBM Plex Sans KR">IBM Plex Sans KR</option>
+              <option value="NanumSquare">Nanum Square</option>
+              <option value="GMarketSans">Gmarket Sans</option>
+              <option value="Inter">Inter</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Poppins">Poppins</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
             </select>
             <div class="bold-toggle" id="boldToggle" title="굵게">B</div>
+            <div class="bold-toggle italic-toggle" id="italicToggle" title="기울임">I</div>
+            <div class="bold-toggle underline-toggle" id="underlineToggle" title="밑줄">U</div>
             <div class="align-btn-row">
               <button class="align-btn" id="alignLeftBtn" title="왼쪽 정렬">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="16" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="13" y2="18"/></svg>
@@ -1432,6 +1463,8 @@ const textFont = document.getElementById('textFont');
 const textSize = document.getElementById('textSize');
 const textSizeVal = document.getElementById('textSizeVal');
 const boldToggle = document.getElementById('boldToggle');
+const italicToggle = document.getElementById('italicToggle');
+const underlineToggle = document.getElementById('underlineToggle');
 const deleteTextBtn = document.getElementById('deleteTextBtn');
 const deleteTextBtnTop = document.getElementById('deleteTextBtnTop');
 const alignLeftBtn = document.getElementById('alignLeftBtn');
@@ -1883,7 +1916,7 @@ function getWrappedLines(layer){
 }
 
 function getTextBBox(layer){
-  ctx.font = (layer.bold ? '700 ' : '400 ') + layer.size + 'px "' + layer.font + '", sans-serif';
+  ctx.font = (layer.italic ? 'italic ' : '') + (layer.bold ? '700 ' : '400 ') + layer.size + 'px "' + layer.font + '", sans-serif';
   const lines = getWrappedLines(layer);
   let maxWidth = 0;
   lines.forEach(l=>{ maxWidth = Math.max(maxWidth, ctx.measureText(l).width); });
@@ -1905,13 +1938,30 @@ function getTextBBox(layer){
 
 function drawTextLayer(layer){
   const bbox = getTextBBox(layer);
-  ctx.font = (layer.bold ? '700 ' : '400 ') + layer.size + 'px "' + layer.font + '", sans-serif';
+  ctx.font = (layer.italic ? 'italic ' : '') + (layer.bold ? '700 ' : '400 ') + layer.size + 'px "' + layer.font + '", sans-serif';
   ctx.fillStyle = layer.color;
   ctx.textAlign = layer.align || 'center';
   ctx.textBaseline = 'middle';
   const startY = layer.y - (bbox.lineHeight * bbox.lines.length)/2 + bbox.lineHeight/2;
   bbox.lines.forEach((line,i)=>{
-    ctx.fillText(line, layer.x, startY + i*bbox.lineHeight);
+    const lineY = startY + i*bbox.lineHeight;
+    ctx.fillText(line, layer.x, lineY);
+    if(layer.underline && line.trim().length){
+      const lw = ctx.measureText(line).width;
+      let ux0, ux1;
+      if(layer.align === 'left'){ ux0 = layer.x; ux1 = layer.x + lw; }
+      else if(layer.align === 'right'){ ux0 = layer.x - lw; ux1 = layer.x; }
+      else { ux0 = layer.x - lw/2; ux1 = layer.x + lw/2; }
+      const underlineY = lineY + layer.size*0.32;
+      ctx.save();
+      ctx.strokeStyle = layer.color;
+      ctx.lineWidth = Math.max(1, layer.size*0.05);
+      ctx.beginPath();
+      ctx.moveTo(ux0, underlineY);
+      ctx.lineTo(ux1, underlineY);
+      ctx.stroke();
+      ctx.restore();
+    }
   });
 }
 
@@ -2539,6 +2589,8 @@ function addTextLayer(initialText, opts){
     color: getContrastColor(bgColor1),
     font: 'Pretendard',
     bold: false,
+    italic: false,
+    underline: false,
     align: 'left'
   };
   textLayers.push(layer);
@@ -2604,6 +2656,8 @@ function syncEditFields(){
   textColorFieldRefs.input.value = layer.color;
   textColorFieldRefs.hexEl.textContent = layer.color.toUpperCase();
   boldToggle.classList.toggle('active', layer.bold);
+  italicToggle.classList.toggle('active', layer.italic);
+  underlineToggle.classList.toggle('active', layer.underline);
   syncAlignButtons(layer.align);
 }
 
@@ -2636,6 +2690,18 @@ boldToggle.addEventListener('click', ()=>{
   const layer = currentLayer(); if(!layer) return;
   layer.bold = !layer.bold;
   boldToggle.classList.toggle('active', layer.bold);
+  draw();
+});
+italicToggle.addEventListener('click', ()=>{
+  const layer = currentLayer(); if(!layer) return;
+  layer.italic = !layer.italic;
+  italicToggle.classList.toggle('active', layer.italic);
+  draw();
+});
+underlineToggle.addEventListener('click', ()=>{
+  const layer = currentLayer(); if(!layer) return;
+  layer.underline = !layer.underline;
+  underlineToggle.classList.toggle('active', layer.underline);
   draw();
 });
 function deleteCurrentTextLayer(){
