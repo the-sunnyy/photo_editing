@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SUNNY-EDIT-VERSION-10-COLLAGE-COMPACT -->
+<!-- SUNNY-EDIT-VERSION-15-CHECKALL-FEEDBACK -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -272,12 +272,14 @@ html,body{
   letter-spacing:0;
   text-transform:none;
   font-weight:600;
-  padding:6px 11px;
+  padding:6px 10px;
   border-radius:100px;
   cursor:pointer;
+  white-space:nowrap;
   transition:border-color .12s, background .12s;
 }
 .add-inline-btn:hover{border-color:var(--accent-dim); background:rgba(231,161,58,0.1);}
+.header-btn-group{display:flex; gap:6px;}
 
 .shape-grid{
   display:grid;
@@ -623,15 +625,18 @@ input[type=range]::-moz-range-thumb{
   line-height:1.4;
 }
 .camera-fields{
-  display:flex;
-  flex-direction:column;
-  gap:7px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px 8px;
 }
 .camera-field-row{
   display:flex;
   align-items:center;
-  gap:6px;
+  gap:5px;
+  min-width:0;
 }
+.camera-field-row.cf-full{grid-column:1 / -1;}
+.camera-field-row.cf-format{gap:8px;}
 .camera-field-row input[type=checkbox]{
   flex:none;
   width:14px;
@@ -641,33 +646,37 @@ input[type=range]::-moz-range-thumb{
 }
 .camera-field-row label{
   flex:none;
-  width:42px;
-  font-size:11px;
+  width:34px;
+  font-size:10.5px;
   color:var(--paper);
   cursor:pointer;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 .camera-field-row input[type=text]{
   flex:1;
   min-width:0;
+  width:100%;
   background:var(--panel-raised);
   border:1px solid var(--rule);
   border-radius:6px;
-  padding:6px 8px;
+  padding:6px 7px;
   color:var(--paper);
-  font-size:11px;
+  font-size:10.5px;
   font-family:'IBM Plex Mono',monospace;
 }
 .camera-field-row input[type=text]:focus{outline:1px solid var(--accent-dim);}
 .camera-field-row select.mini-select{
-  flex:none;
-  width:auto;
-  max-width:78px;
+  flex:1;
+  width:100%;
+  min-width:0;
   background:var(--panel-raised);
   border:1px solid var(--rule);
   border-radius:6px;
   padding:6px 3px;
   color:var(--paper);
-  font-size:10.5px;
+  font-size:10px;
   font-family:'Inter',sans-serif;
 }
 
@@ -986,9 +995,9 @@ select{
         <div class="text-edit" id="photoStickerEdit" style="display:none;">
           <div class="bg-row" style="margin-bottom:12px;">
             <select id="stickerShapeSelect" class="bg-type-select">
-              <option value="rounded">둥근 사각형</option>
               <option value="circle">원형</option>
               <option value="rect">사각형</option>
+              <option value="rounded">둥근 사각형</option>
             </select>
             <div class="tri-slider-col">
               <label>크기 <span class="val" id="stickerSizeVal">240px</span></label>
@@ -1066,49 +1075,57 @@ select{
       </div>
 
       <div class="control-group compact-group">
-        <h3>카메라 정보</h3>
+        <h3>
+          카메라 정보
+          <span class="header-btn-group">
+            <button class="add-inline-btn" id="checkAllBtn">전체 선택</button>
+            <button class="add-inline-btn" id="uncheckAllBtn">체크 해제</button>
+          </span>
+        </h3>
         <div class="camera-status" id="cameraStatus">사진을 업로드하면 촬영 정보를 확인해요.</div>
         <div class="camera-fields" id="cameraFields" style="display:none;">
-          <div class="camera-field-row">
-            <input type="checkbox" id="fieldCheck-model">
+          <div class="camera-field-row cf-full">
+            <input type="checkbox" id="fieldCheck-model" checked>
             <label for="fieldCheck-model">기종</label>
             <input type="text" id="fieldValue-model" placeholder="예: RICOH GR3">
           </div>
           <div class="camera-field-row">
-            <input type="checkbox" id="fieldCheck-fNumber">
+            <input type="checkbox" id="fieldCheck-fNumber" checked>
             <label for="fieldCheck-fNumber">조리개</label>
-            <input type="text" id="fieldValue-fNumber" placeholder="예: f/1.8">
+            <input type="text" id="fieldValue-fNumber" placeholder="f/1.8">
           </div>
           <div class="camera-field-row">
-            <input type="checkbox" id="fieldCheck-exposureTime">
+            <input type="checkbox" id="fieldCheck-exposureTime" checked>
             <label for="fieldCheck-exposureTime">셔터</label>
-            <input type="text" id="fieldValue-exposureTime" placeholder="예: 1/125s">
+            <input type="text" id="fieldValue-exposureTime" placeholder="1/125s">
           </div>
           <div class="camera-field-row">
-            <input type="checkbox" id="fieldCheck-iso">
+            <input type="checkbox" id="fieldCheck-iso" checked>
             <label for="fieldCheck-iso">ISO</label>
-            <input type="text" id="fieldValue-iso" placeholder="예: ISO 200">
+            <input type="text" id="fieldValue-iso" placeholder="ISO 200">
           </div>
           <div class="camera-field-row">
-            <input type="checkbox" id="fieldCheck-focalLength">
-            <label for="fieldCheck-focalLength">초점거리</label>
-            <input type="text" id="fieldValue-focalLength" placeholder="예: 24mm">
+            <input type="checkbox" id="fieldCheck-focalLength" checked>
+            <label for="fieldCheck-focalLength">초점</label>
+            <input type="text" id="fieldValue-focalLength" placeholder="24mm">
           </div>
           <div class="camera-field-row">
-            <input type="checkbox" id="fieldCheck-date">
+            <input type="checkbox" id="fieldCheck-date" checked>
             <label for="fieldCheck-date">날짜</label>
-            <input type="text" id="fieldValue-date" placeholder="예: 2024.01.15">
+            <input type="text" id="fieldValue-date" placeholder="2024.01.15">
+          </div>
+          <div class="camera-field-row">
+            <input type="checkbox" id="fieldCheck-time" checked>
+            <label for="fieldCheck-time">시간</label>
+            <input type="text" id="fieldValue-time" placeholder="14:32">
+          </div>
+          <div class="camera-field-row cf-full cf-format">
             <select id="dateFormatSelect" class="mini-select">
               <option value="dot">2024.01.15</option>
               <option value="dash">2024-01-15</option>
               <option value="short">24.01.15</option>
               <option value="us">01/15/2024</option>
             </select>
-          </div>
-          <div class="camera-field-row">
-            <input type="checkbox" id="fieldCheck-time">
-            <label for="fieldCheck-time">시간</label>
-            <input type="text" id="fieldValue-time" placeholder="예: 14:32">
             <select id="timeFormatSelect" class="mini-select">
               <option value="24h">24시간</option>
               <option value="12h">12시간</option>
@@ -1262,6 +1279,18 @@ const cameraStampBtn = document.getElementById('cameraStampBtn');
 const dateFormatSelect = document.getElementById('dateFormatSelect');
 const timeFormatSelect = document.getElementById('timeFormatSelect');
 const CAMERA_FIELD_KEYS = ['model','fNumber','exposureTime','iso','focalLength','date','time'];
+const checkAllBtn = document.getElementById('checkAllBtn');
+const uncheckAllBtn = document.getElementById('uncheckAllBtn');
+checkAllBtn.addEventListener('click', ()=>{
+  CAMERA_FIELD_KEYS.forEach(key=>{
+    document.getElementById('fieldCheck-'+key).checked = true;
+  });
+});
+uncheckAllBtn.addEventListener('click', ()=>{
+  CAMERA_FIELD_KEYS.forEach(key=>{
+    document.getElementById('fieldCheck-'+key).checked = false;
+  });
+});
 
 const addTextBtn = document.getElementById('addTextBtn');
 const textEmpty = document.getElementById('textEmpty');
@@ -1829,7 +1858,7 @@ async function loadImageFile(file){
   cameraStampLayerId = null;
   rawDateTimeOriginal = null;
   CAMERA_FIELD_KEYS.forEach(key=>{
-    document.getElementById('fieldCheck-'+key).checked = false;
+    document.getElementById('fieldCheck-'+key).checked = true;
     document.getElementById('fieldValue-'+key).value = '';
   });
 
@@ -1861,7 +1890,7 @@ async function loadImageFile(file){
 }
 
 function populateCameraFields(exif){
-  cameraFields.style.display = 'flex';
+  cameraFields.style.display = 'grid';
   cameraStampBtn.style.display = 'block';
 
   const hasAny = exif && Object.keys(exif).length > 0;
@@ -2083,7 +2112,16 @@ function buildCameraStampText(){
 
 cameraStampBtn.addEventListener('click', ()=>{
   const text = buildCameraStampText();
-  if(!text) return;
+  if(!text){
+    const original = cameraStatus.textContent;
+    cameraStatus.textContent = '체크된 항목에 입력된 값이 없어요. 칸에 값을 직접 입력한 뒤 다시 눌러주세요.';
+    cameraStatus.style.color = 'var(--danger)';
+    setTimeout(()=>{
+      cameraStatus.textContent = original;
+      cameraStatus.style.color = '';
+    }, 2600);
+    return;
+  }
   const existing = textLayers.find(t=>t.id === cameraStampLayerId);
   if(existing){
     existing.text = text;
@@ -2436,7 +2474,7 @@ function addPhotoLayer(image){
     x: outputW/2 + cascade,
     y: outputH/2 + cascade,
     size: Math.round(Math.min(outputW, outputH) * 0.32),
-    shape: 'rounded',
+    shape: 'circle',
     border: false
   };
   photoLayers.push(layer);
