@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SUNNY-EDIT-VERSION-18-MULTI-STAMP -->
+<!-- SUNNY-EDIT-VERSION-20-TWOCOL-EVERYWHERE -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -14,6 +14,7 @@
 <meta name="theme-color" content="#1B1A18">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Fraunces:wght@400;600&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
 
 :root{
   --ink:#1B1A18;
@@ -523,6 +524,17 @@ html,body{
 
 .no-border{background:transparent; border:none; padding:0;}
 
+.two-col-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  align-items:start;
+}
+.two-col-item{min-width:0;}
+.two-col-item .bg-row{flex-wrap:wrap;}
+.two-col-item .bg-type-select{width:100%; min-width:0;}
+
+
 .slider-row{margin-bottom:14px;}
 .slider-row:last-child{margin-bottom:0;}
 .slider-row label{
@@ -568,11 +580,20 @@ input[type=range]::-moz-range-thumb{
   gap:10px;
 }
 .actions-3col{gap:6px;}
-.actions-3col .small-tile{
+.actions-2col{gap:8px;}
+.small-tile{
   padding:10px 4px;
   font-size:11.5px;
   white-space:nowrap;
 }
+
+.size-color-row{
+  display:flex;
+  align-items:flex-end;
+  gap:14px;
+}
+.size-color-row .tri-slider-col{flex:1;}
+.size-color-row .text-color-row{flex:none; padding-bottom:2px;}
 
 .btn{
   flex:1;
@@ -783,9 +804,41 @@ select{
   color:var(--paper);
   font-weight:700;
   cursor:pointer;
-  height:38px;
+  flex:none;
+  width:36px;
+  height:36px;
 }
 .bold-toggle.active{border-color:var(--accent); color:var(--accent);}
+
+.text-toolbar{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.text-font-select{width:auto; flex:1; min-width:90px;}
+.align-btn-row{
+  display:flex;
+  gap:4px;
+  flex:none;
+}
+.align-btn-row .align-btn{
+  width:34px;
+  height:36px;
+  padding:0;
+}
+.text-color-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.text-color-row .mini-format-label{
+  font-size:11px;
+  color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;
+  letter-spacing:0.03em;
+}
 
 /* --- crop modal --- */
 .crop-modal{
@@ -1002,95 +1055,139 @@ select{
         </div>
       </div>
 
-      <div class="control-group compact-group no-border">
-        <h3>
-          콜라주 스티커
-          <button class="add-inline-btn" id="addPhotoStickerBtn">+ 사진 추가</button>
-        </h3>
-        <div class="text-empty" id="photoStickerEmpty">아직 추가된 사진이 없어요.</div>
-        <div class="layer-list" id="photoLayerList"></div>
-        <div class="text-edit" id="photoStickerEdit" style="display:none;">
-          <div class="bg-row" style="margin-bottom:12px;">
-            <select id="stickerShapeSelect" class="bg-type-select">
-              <option value="circle">원형</option>
-              <option value="rect">사각형</option>
-              <option value="rounded">둥근 사각형</option>
+      <div class="two-col-wrap">
+        <div class="control-group compact-group no-border two-col-item">
+          <h3>
+            콜라주 스티커
+            <button class="add-inline-btn" id="addPhotoStickerBtn">+ 사진 추가</button>
+          </h3>
+          <div class="text-empty" id="photoStickerEmpty">아직 추가된 사진이 없어요.</div>
+          <div class="layer-list" id="photoLayerList"></div>
+          <div class="text-edit" id="photoStickerEdit" style="display:none;">
+            <div class="bg-row" style="margin-bottom:12px;">
+              <select id="stickerShapeSelect" class="bg-type-select">
+                <option value="circle">원형</option>
+                <option value="rect">사각형</option>
+                <option value="rounded">둥근 사각형</option>
+              </select>
+              <div class="tri-slider-col">
+                <label>크기 <span class="val" id="stickerSizeVal">240px</span></label>
+                <input type="range" id="stickerSizeSlider" min="60" max="700" value="240">
+              </div>
+            </div>
+            <div class="field-row">
+              <div>
+                <button class="btn secondary small full" id="stickerBorderToggle" style="width:100%;">흰 테두리 켜기</button>
+              </div>
+              <div>
+                <button class="btn danger-outline small full" id="deleteStickerBtn" style="width:100%;">삭제</button>
+              </div>
+            </div>
+          </div>
+          <input type="file" id="stickerFileInput" class="file-input" accept="image/*" multiple>
+        </div>
+
+        <div class="control-group compact-group no-border two-col-item">
+          <h3>배경</h3>
+          <div class="bg-row">
+            <select id="bgTypeSelect" class="bg-type-select">
+              <option value="solid">단색</option>
+              <option value="gradient-linear">그라데이션</option>
+              <option value="gradient-radial">방사형</option>
+              <option value="pattern">패턴</option>
             </select>
-            <div class="tri-slider-col">
-              <label>크기 <span class="val" id="stickerSizeVal">240px</span></label>
-              <input type="range" id="stickerSizeSlider" min="60" max="700" value="240">
-            </div>
-          </div>
-          <div class="field-row">
-            <div>
-              <button class="btn secondary small full" id="stickerBorderToggle" style="width:100%;">흰 테두리 켜기</button>
-            </div>
-            <div>
-              <button class="btn danger-outline small full" id="deleteStickerBtn" style="width:100%;">삭제</button>
-            </div>
-          </div>
-        </div>
-        <input type="file" id="stickerFileInput" class="file-input" accept="image/*" multiple>
-      </div>
 
-      <div class="control-group compact-group no-border">
-        <h3>배경</h3>
-        <div class="bg-row">
-          <select id="bgTypeSelect" class="bg-type-select">
-            <option value="solid">단색</option>
-            <option value="gradient-linear">그라데이션</option>
-            <option value="gradient-radial">방사형</option>
-            <option value="pattern">패턴</option>
-          </select>
+            <div class="chip-group active" id="chipsSolid">
+              <div class="chip-group-row">
+                <div id="bgSolidColorField"></div>
+                <button type="button" class="chip-mini" id="quickWhite" style="background:#FFFFFF;" title="흰색"></button>
+                <button type="button" class="chip-mini" id="quickBlack" style="background:#000000;" title="검정"></button>
+              </div>
+            </div>
+            <div class="chip-group" id="chipsLinear">
+              <div class="chip-group-row">
+                <div id="bgLinearColor1Field"></div>
+                <div id="bgLinearColor2Field"></div>
+              </div>
+            </div>
+            <div class="chip-group" id="chipsRadial">
+              <div class="chip-group-row">
+                <div id="bgRadialColor1Field"></div>
+                <div id="bgRadialColor2Field"></div>
+              </div>
+            </div>
+            <div class="chip-group" id="chipsPattern">
+              <div class="chip-group-row">
+                <div id="bgPatternColor1Field"></div>
+                <div id="bgPatternColor2Field"></div>
+              </div>
+            </div>
+          </div>
 
-          <div class="chip-group active" id="chipsSolid">
-            <div class="chip-group-row">
-              <div id="bgSolidColorField"></div>
-              <button type="button" class="chip-mini" id="quickWhite" style="background:#FFFFFF;" title="흰색"></button>
-              <button type="button" class="chip-mini" id="quickBlack" style="background:#000000;" title="검정"></button>
+          <div class="bg-extra" id="extraLinear">
+            <div class="slider-row">
+              <label>각도 <span class="val" id="angleVal">45°</span></label>
+              <input type="range" id="angleSlider" min="0" max="360" value="45">
             </div>
           </div>
-          <div class="chip-group" id="chipsLinear">
-            <div class="chip-group-row">
-              <div id="bgLinearColor1Field"></div>
-              <div id="bgLinearColor2Field"></div>
-            </div>
-          </div>
-          <div class="chip-group" id="chipsRadial">
-            <div class="chip-group-row">
-              <div id="bgRadialColor1Field"></div>
-              <div id="bgRadialColor2Field"></div>
-            </div>
-          </div>
-          <div class="chip-group" id="chipsPattern">
-            <div class="chip-group-row">
-              <div id="bgPatternColor1Field"></div>
-              <div id="bgPatternColor2Field"></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="bg-extra" id="extraLinear">
-          <div class="slider-row">
-            <label>각도 <span class="val" id="angleVal">45°</span></label>
-            <input type="range" id="angleSlider" min="0" max="360" value="45">
-          </div>
-        </div>
-
-        <div class="bg-extra" id="extraPattern">
-          <div class="shape-grid pattern-type-grid" id="patternTypeGrid">
-            <button class="shape-btn active" data-pattern="dots">도트</button>
-            <button class="shape-btn" data-pattern="stripes">스트라이프</button>
-          </div>
-          <div class="slider-row">
-            <label>패턴 크기 <span class="val" id="patternSizeVal">8%</span></label>
-            <input type="range" id="patternSizeSlider" min="2" max="20" value="8">
+          <div class="bg-extra" id="extraPattern">
+            <div class="shape-grid pattern-type-grid" id="patternTypeGrid">
+              <button class="shape-btn active" data-pattern="dots">도트</button>
+              <button class="shape-btn" data-pattern="stripes">스트라이프</button>
+            </div>
+            <div class="slider-row">
+              <label>패턴 크기 <span class="val" id="patternSizeVal">8%</span></label>
+              <input type="range" id="patternSizeSlider" min="2" max="20" value="8">
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="panel">
+      <div class="control-group compact-group">
+        <h3>텍스트</h3>
+        <div class="actions actions-2col" style="margin-bottom:14px;">
+          <button class="btn secondary small-tile" id="addTextBtn">+ 텍스트 추가</button>
+          <button class="btn danger-outline small-tile" id="deleteTextBtn" disabled>텍스트 삭제</button>
+        </div>
+        <div class="text-empty" id="textEmpty">아직 추가된 텍스트가 없어요.</div>
+        <div class="layer-list" id="layerList"></div>
+        <div class="text-edit" id="textEdit" style="display:none;">
+          <textarea id="textContent" placeholder="텍스트를 입력하세요"></textarea>
+          <div class="text-toolbar">
+            <select id="textFont" class="bg-type-select text-font-select">
+              <option value="Pretendard">Pretendard</option>
+              <option value="IBM Plex Mono">IBM Plex Mono</option>
+              <option value="Fraunces">Fraunces</option>
+            </select>
+            <div class="bold-toggle" id="boldToggle" title="굵게">B</div>
+            <div class="align-btn-row">
+              <button class="align-btn" id="alignLeftBtn" title="왼쪽 정렬">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="16" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="13" y2="18"/></svg>
+              </button>
+              <button class="align-btn active" id="alignCenterBtn" title="가운데 정렬">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="6" x2="17" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="6" y1="18" x2="18" y2="18"/></svg>
+              </button>
+              <button class="align-btn" id="alignRightBtn" title="오른쪽 정렬">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="11" y1="18" x2="20" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="size-color-row">
+            <div class="tri-slider-col">
+              <label>크기 <span class="val" id="textSizeVal">48px</span></label>
+              <input type="range" id="textSize" min="14" max="200" value="48">
+            </div>
+            <div class="text-color-row">
+              <span class="mini-format-label">색상</span>
+              <div id="textColorField"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="control-group compact-group">
         <h3>
           카메라 정보
@@ -1150,56 +1247,6 @@ select{
           </div>
         </div>
         <button class="btn primary full" id="cameraStampBtn" style="margin-top:10px; display:none;">텍스트로 추가</button>
-      </div>
-
-      <div class="control-group compact-group">
-        <h3>텍스트</h3>
-        <button class="btn secondary full" id="addTextBtn" style="margin-bottom:14px;">+ 텍스트 추가</button>
-        <div class="text-empty" id="textEmpty">아직 추가된 텍스트가 없어요.</div>
-        <div class="layer-list" id="layerList"></div>
-        <div class="text-edit" id="textEdit" style="display:none;">
-          <textarea id="textContent" placeholder="텍스트를 입력하세요"></textarea>
-          <div class="field-row">
-            <div>
-              <label>글꼴</label>
-              <select id="textFont">
-                <option value="Inter">Inter (기본)</option>
-                <option value="IBM Plex Mono">IBM Plex Mono</option>
-                <option value="Fraunces">Fraunces (세리프)</option>
-              </select>
-            </div>
-            <div style="max-width:60px;">
-              <label>굵게</label>
-              <div class="bold-toggle" id="boldToggle">B</div>
-            </div>
-          </div>
-          <div class="slider-row">
-            <label>크기 <span class="val" id="textSizeVal">48px</span></label>
-            <input type="range" id="textSize" min="14" max="200" value="48">
-          </div>
-          <div id="textColorField"></div>
-
-          <div style="margin-top:14px;">
-            <label style="display:block; font-size:11px; color:var(--muted); margin-bottom:8px; font-family:'IBM Plex Mono',monospace; letter-spacing:0.03em;">사진 기준 정렬</label>
-            <div class="shape-grid align-grid">
-              <button class="align-btn" id="alignLeftBtn" title="왼쪽 정렬">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="16" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="13" y2="18"/></svg>
-              </button>
-              <button class="align-btn active" id="alignCenterBtn" title="가운데 정렬">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="6" x2="17" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="6" y1="18" x2="18" y2="18"/></svg>
-              </button>
-              <button class="align-btn" id="alignRightBtn" title="오른쪽 정렬">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="11" y1="18" x2="20" y2="18"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="field-row" style="margin-top:14px;">
-            <div>
-              <button class="btn danger-outline small full" id="deleteTextBtn" style="width:100%;">텍스트 삭제</button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -1562,7 +1609,7 @@ createColorChip(document.getElementById('bgPatternColor2Field'), {
   onChange: (v)=>{ bgColor2 = v; draw(); }
 });
 
-const textColorFieldRefs = createColorField(document.getElementById('textColorField'), {
+const textColorFieldRefs = createColorChip(document.getElementById('textColorField'), {
   label: '텍스트 색상', initial: '#1B1A18',
   onChange: (v)=>{ const layer = currentLayer(); if(!layer) return; layer.color = v; draw(); }
 });
@@ -1769,7 +1816,7 @@ function getWrappedLines(layer){
 }
 
 function getTextBBox(layer){
-  ctx.font = (layer.bold ? '700 ' : '400 ') + layer.size + 'px ' + layer.font;
+  ctx.font = (layer.bold ? '700 ' : '400 ') + layer.size + 'px "' + layer.font + '", sans-serif';
   const lines = getWrappedLines(layer);
   let maxWidth = 0;
   lines.forEach(l=>{ maxWidth = Math.max(maxWidth, ctx.measureText(l).width); });
@@ -1791,7 +1838,7 @@ function getTextBBox(layer){
 
 function drawTextLayer(layer){
   const bbox = getTextBBox(layer);
-  ctx.font = (layer.bold ? '700 ' : '400 ') + layer.size + 'px ' + layer.font;
+  ctx.font = (layer.bold ? '700 ' : '400 ') + layer.size + 'px "' + layer.font + '", sans-serif';
   ctx.fillStyle = layer.color;
   ctx.textAlign = layer.align || 'center';
   ctx.textBaseline = 'middle';
@@ -2396,7 +2443,7 @@ function addTextLayer(initialText, opts){
     y: opts.stamp ? (outputH - margins.bottom/2) : outputH/2,
     size: opts.stamp ? Math.max(18, Math.round(outputW*0.028)) : Math.max(24, Math.round(outputW*0.07)),
     color: getContrastColor(bgColor1),
-    font: opts.stamp ? 'IBM Plex Mono' : 'Inter',
+    font: opts.stamp ? 'IBM Plex Mono' : 'Pretendard',
     bold: false,
     align: 'center'
   };
@@ -2451,9 +2498,11 @@ function syncEditFields(){
   const layer = textLayers.find(t=>t.id === selectedTextId);
   if(!layer){
     textEdit.style.display = 'none';
+    deleteTextBtn.disabled = true;
     return;
   }
   textEdit.style.display = 'block';
+  deleteTextBtn.disabled = false;
   textContent.value = layer.text;
   textFont.value = layer.font;
   textSize.value = layer.size;
