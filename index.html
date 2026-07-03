@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SUNNY-EDIT-VERSION-24-VCENTER-ONLY -->
+<!-- SUNNY-EDIT-VERSION-29-HALIGN-ADDED -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -724,14 +724,14 @@ input[type=range]::-moz-range-thumb{
 }
 .layer-list{
   display:flex;
-  flex-direction:column;
+  flex-direction:row;
+  flex-wrap:wrap;
   gap:6px;
   margin-bottom:14px;
 }
 .layer-chip{
   display:flex;
   align-items:center;
-  justify-content:space-between;
   gap:8px;
   background:var(--panel-raised);
   border:1px solid var(--rule);
@@ -739,6 +739,8 @@ input[type=range]::-moz-range-thumb{
   padding:8px 10px;
   cursor:pointer;
   font-size:12.5px;
+  flex:0 1 auto;
+  max-width:100%;
 }
 .layer-chip.active{border-color:var(--accent);}
 .layer-chip .txt{
@@ -746,6 +748,7 @@ input[type=range]::-moz-range-thumb{
   text-overflow:ellipsis;
   white-space:nowrap;
   color:var(--paper);
+  max-width:120px;
 }
 .layer-chip .del{
   color:var(--muted);
@@ -1049,8 +1052,13 @@ select{
           </div>
         </div>
         <div class="actions actions-3col" style="margin-top:12px;">
+          <button class="btn secondary small-tile" id="vAlignTopBtn" title="여백 없이 맨 위에 붙여요">위</button>
+          <button class="btn secondary small-tile" id="vAlignCenterBtn" title="세로 정중앙">세로 중앙</button>
+          <button class="btn secondary small-tile" id="vAlignBottomBtn" title="여백 없이 맨 아래에 붙여요">아래</button>
+        </div>
+        <div class="actions actions-3col" style="margin-top:8px;">
+          <button class="btn secondary small-tile" id="hAlignCenterBtn" title="가로 정중앙">가로 중앙</button>
           <button class="btn secondary small-tile" id="cropBtn" disabled>자유 크롭</button>
-          <button class="btn secondary small-tile" id="centerPhotoBtn" title="세로 위치만 가운데로 맞춰요">세로 중앙</button>
           <button class="btn primary small-tile" id="downloadBtn" disabled>다운로드</button>
         </div>
       </div>
@@ -1311,7 +1319,10 @@ const dimsLabel = document.getElementById('dimsLabel');
 const newPhotoBtn = document.getElementById('newPhotoBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const cropBtn = document.getElementById('cropBtn');
-const centerPhotoBtn = document.getElementById('centerPhotoBtn');
+const vAlignTopBtn = document.getElementById('vAlignTopBtn');
+const vAlignCenterBtn = document.getElementById('vAlignCenterBtn');
+const vAlignBottomBtn = document.getElementById('vAlignBottomBtn');
+const hAlignCenterBtn = document.getElementById('hAlignCenterBtn');
 const zoomSlider = document.getElementById('zoomSlider');
 const zoomVal = document.getElementById('zoomVal');
 const paddingSlider = document.getElementById('paddingSlider');
@@ -2270,8 +2281,33 @@ bottomPadSlider.addEventListener('input', (e)=>{
   draw();
 });
 
-centerPhotoBtn.addEventListener('click', ()=>{
-  offsetY = 0;
+vAlignTopBtn.addEventListener('click', ()=>{
+  if(!img) return;
+  const bounds = getPhotoBounds();
+  offsetY += (0) - bounds.top;
+  draw();
+});
+
+vAlignCenterBtn.addEventListener('click', ()=>{
+  if(!img) return;
+  const bounds = getPhotoBounds();
+  const currentCenterY = (bounds.top + bounds.bottom) / 2;
+  offsetY += (outputH/2) - currentCenterY;
+  draw();
+});
+
+vAlignBottomBtn.addEventListener('click', ()=>{
+  if(!img) return;
+  const bounds = getPhotoBounds();
+  offsetY += outputH - bounds.bottom;
+  draw();
+});
+
+hAlignCenterBtn.addEventListener('click', ()=>{
+  if(!img) return;
+  const bounds = getPhotoBounds();
+  const currentCenterX = (bounds.left + bounds.right) / 2;
+  offsetX += (outputW/2) - currentCenterX;
   draw();
 });
 
