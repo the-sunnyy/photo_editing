@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SUNNY-EDIT-VERSION-29-HALIGN-ADDED -->
+<!-- SUNNY-EDIT-VERSION-30-TOP-X-DELETE -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -758,6 +758,35 @@ input[type=range]::-moz-range-thumb{
 }
 .layer-chip .del:hover{color:var(--danger);}
 
+.edit-panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.edit-panel-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:0.05em;
+  color:var(--muted);
+}
+.edit-close-x{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:var(--panel-raised);
+  border:1px solid var(--rule);
+  color:var(--danger);
+  font-size:13px;
+  line-height:1;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:border-color .12s, background .12s;
+}
+.edit-close-x:hover{border-color:var(--danger); background:rgba(193,101,61,0.12);}
+
 .text-edit textarea{
   width:100%;
   min-height:60px;
@@ -1161,6 +1190,10 @@ select{
         <div class="text-empty" id="textEmpty">아직 추가된 텍스트가 없어요.</div>
         <div class="layer-list" id="layerList"></div>
         <div class="text-edit" id="textEdit" style="display:none;">
+          <div class="edit-panel-head">
+            <span class="edit-panel-label">텍스트 편집</span>
+            <button class="edit-close-x" id="deleteTextBtnTop" title="이 텍스트 삭제">✕</button>
+          </div>
           <textarea id="textContent" placeholder="텍스트를 입력하세요"></textarea>
           <div class="text-toolbar">
             <select id="textFont" class="bg-type-select text-font-select">
@@ -1376,6 +1409,7 @@ const textSize = document.getElementById('textSize');
 const textSizeVal = document.getElementById('textSizeVal');
 const boldToggle = document.getElementById('boldToggle');
 const deleteTextBtn = document.getElementById('deleteTextBtn');
+const deleteTextBtnTop = document.getElementById('deleteTextBtnTop');
 const alignLeftBtn = document.getElementById('alignLeftBtn');
 const alignCenterBtn = document.getElementById('alignCenterBtn');
 const alignRightBtn = document.getElementById('alignRightBtn');
@@ -2580,14 +2614,16 @@ boldToggle.addEventListener('click', ()=>{
   boldToggle.classList.toggle('active', layer.bold);
   draw();
 });
-deleteTextBtn.addEventListener('click', ()=>{
+function deleteCurrentTextLayer(){
   const layer = currentLayer(); if(!layer) return;
   textLayers = textLayers.filter(t=>t.id !== layer.id);
   selectedTextId = null;
   renderLayerList();
   syncEditFields();
   draw();
-});
+}
+deleteTextBtn.addEventListener('click', deleteCurrentTextLayer);
+deleteTextBtnTop.addEventListener('click', deleteCurrentTextLayer);
 
 function applyAlign(align){
   const layer = currentLayer(); if(!layer) return;
