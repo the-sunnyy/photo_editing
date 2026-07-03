@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SUNNY-EDIT-VERSION-21-SUNNY-STUDIO-BRAND -->
+<!-- SUNNY-EDIT-VERSION-23-BG-ONELINE-COMPACT -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -459,8 +459,8 @@ html,body{
   color:var(--muted);
 }
 .chip-mini{
-  width:22px;
-  height:22px;
+  width:18px;
+  height:18px;
   flex:none;
   border-radius:50%;
   cursor:pointer;
@@ -493,7 +493,7 @@ html,body{
 }
 .chip-group{display:none; flex-direction:column; gap:8px; flex:1; min-width:0;}
 .chip-group.active{display:flex;}
-.chip-group-row{display:flex; flex-wrap:wrap; align-items:center; gap:10px;}
+.chip-group-row{display:flex; flex-wrap:wrap; align-items:center; gap:6px;}
 .bg-extra{display:none; margin-top:12px;}
 .bg-extra.active{display:block;}
 
@@ -1057,10 +1057,8 @@ select{
 
       <div class="two-col-wrap">
         <div class="control-group compact-group no-border two-col-item">
-          <h3>
-            콜라주 스티커
-            <button class="add-inline-btn" id="addPhotoStickerBtn">+ 사진 추가</button>
-          </h3>
+          <h3>콜라주 스티커</h3>
+          <button class="btn secondary full" id="addPhotoStickerBtn" style="margin-bottom:10px;">+ 사진 추가</button>
           <div class="text-empty" id="photoStickerEmpty">아직 추가된 사진이 없어요.</div>
           <div class="layer-list" id="photoLayerList"></div>
           <div class="text-edit" id="photoStickerEdit" style="display:none;">
@@ -2436,16 +2434,18 @@ cropApplyBtn.addEventListener('click', ()=>{
 function addTextLayer(initialText, opts){
   opts = opts || {};
   const margins = getVerticalMargins();
+  const b = getPhotoBounds();
+  const leftMargin = Math.max(outputW*0.07*0.35, (b.right-b.left)*0.02);
   const layer = {
     id: nextLayerId++,
     text: initialText !== undefined ? initialText : '텍스트 입력',
-    x: outputW/2,
+    x: opts.stamp ? outputW/2 : (b.left + leftMargin),
     y: opts.stamp ? (outputH - margins.bottom/2) : outputH/2,
     size: opts.stamp ? Math.max(18, Math.round(outputW*0.028)) : Math.max(24, Math.round(outputW*0.07)),
     color: getContrastColor(bgColor1),
     font: opts.stamp ? 'IBM Plex Mono' : 'Pretendard',
     bold: false,
-    align: 'center'
+    align: opts.stamp ? 'center' : 'left'
   };
   textLayers.push(layer);
   selectedTextId = layer.id;
