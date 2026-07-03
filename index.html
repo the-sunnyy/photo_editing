@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SUNNY-EDIT-VERSION-16-WRAP-RESIZE-HANDLE -->
+<!-- SUNNY-EDIT-VERSION-17-STAMP-GROUPING-REORDER -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -1032,10 +1032,8 @@ select{
         </div>
         <input type="file" id="stickerFileInput" class="file-input" accept="image/*" multiple>
       </div>
-    </div>
 
-    <div class="panel">
-      <div class="control-group compact-group">
+      <div class="control-group compact-group no-border">
         <h3>배경</h3>
         <div class="bg-row">
           <select id="bgTypeSelect" class="bg-type-select">
@@ -1090,7 +1088,9 @@ select{
           </div>
         </div>
       </div>
+    </div>
 
+    <div class="panel">
       <div class="control-group compact-group">
         <h3>
           카메라 정보
@@ -2149,24 +2149,31 @@ canvasShell.addEventListener('drop', (e)=>{
 
 /* ---------- camera info stamp ---------- */
 
-function buildCameraStampText(){
-  const line1 = [];
-  const line2 = [];
-  if(document.getElementById('fieldCheck-model').checked){
-    const v = document.getElementById('fieldValue-model').value.trim();
-    if(v) line1.push(v);
+function fieldValIfChecked(key){
+  const cb = document.getElementById('fieldCheck-'+key);
+  const inp = document.getElementById('fieldValue-'+key);
+  if(cb.checked){
+    const v = inp.value.trim();
+    if(v) return v;
   }
-  ['fNumber','exposureTime','iso','focalLength','date','time'].forEach(key=>{
-    const cb = document.getElementById('fieldCheck-'+key);
-    const inp = document.getElementById('fieldValue-'+key);
-    if(cb.checked){
-      const v = inp.value.trim();
-      if(v) line2.push(v);
-    }
-  });
+  return null;
+}
+
+function buildCameraStampText(){
   const lines = [];
-  if(line1.length) lines.push(line1.join(' '));
-  if(line2.length) lines.push(line2.join(' · '));
+
+  const modelVal = fieldValIfChecked('model');
+  if(modelVal) lines.push(modelVal);
+
+  const pairs = [['fNumber','exposureTime'], ['iso','focalLength']];
+  pairs.forEach(pair=>{
+    const vals = pair.map(fieldValIfChecked).filter(Boolean);
+    if(vals.length) lines.push(vals.join(' · '));
+  });
+
+  const dtVals = [fieldValIfChecked('date'), fieldValIfChecked('time')].filter(Boolean);
+  if(dtVals.length) lines.push(dtVals.join(' · '));
+
   return lines.join('\n');
 }
 
@@ -2808,7 +2815,7 @@ resizeHandle.addEventListener('pointerdown', (e)=>{
   if(!info) return;
   resizeMode = true;
   const pt = pointFromHandleEvent(e);
-  resizeStartDist = Math.max(10, Math.hypot(pt.x-info.x, pt.y-info.y));
+  resizeStartDist = Math.max(40, Math.hypot(pt.x-info.x, pt.y-info.y));
   resizeStartSize = info.size;
   resizeHandle.setPointerCapture(e.pointerId);
 });
