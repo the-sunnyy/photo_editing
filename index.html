@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SUNNY-EDIT-VERSION-23-BG-ONELINE-COMPACT -->
+<!-- SUNNY-EDIT-VERSION-24-VCENTER-ONLY -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -1050,7 +1050,7 @@ select{
         </div>
         <div class="actions actions-3col" style="margin-top:12px;">
           <button class="btn secondary small-tile" id="cropBtn" disabled>자유 크롭</button>
-          <button class="btn secondary small-tile" id="centerPhotoBtn">가운데 정렬</button>
+          <button class="btn secondary small-tile" id="centerPhotoBtn" title="세로 위치만 가운데로 맞춰요">세로 중앙</button>
           <button class="btn primary small-tile" id="downloadBtn" disabled>다운로드</button>
         </div>
       </div>
@@ -2271,7 +2271,7 @@ bottomPadSlider.addEventListener('input', (e)=>{
 });
 
 centerPhotoBtn.addEventListener('click', ()=>{
-  offsetX = 0; offsetY = 0;
+  offsetY = 0;
   draw();
 });
 
